@@ -1,14 +1,34 @@
 "use client"
 
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet"
+import L from 'leaflet'
 import "leaflet/dist/leaflet.css"
 import { useEffect } from "react"
+import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet"
 
 interface Shelter {
   lat: number
   lon: number
   name: string
 }
+
+// Define icons at the top level
+const userIcon = L.icon({
+  iconUrl: '/images/user-marker.png',
+  iconSize: [20, 30],
+  iconAnchor: [15, 30],
+  popupAnchor: [0, -30],
+  shadowUrl: '/images/marker-shadow.png',
+  shadowSize: [41, 41]
+})
+
+const shelterIcon = L.icon({
+  iconUrl: '/images/shelter-marker.png',
+  iconSize: [20, 30],
+  iconAnchor: [15, 30],
+  popupAnchor: [0, -30],
+  shadowUrl: '/images/marker-shadow.png',
+  shadowSize: [41, 41]
+})
 
 function RecenterMap({ center }: { center: [number, number] }) {
   const map = useMap()
@@ -39,12 +59,19 @@ export default function MapView({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {userPos && (
-        <Marker position={[userPos.lat, userPos.lon]}>
+        <Marker 
+          position={[userPos.lat, userPos.lon]}
+          icon={userIcon}
+        >
           <Popup>Your Location</Popup>
         </Marker>
       )}
       {shelters.map((shelter, i) => (
-        <Marker key={i} position={[shelter.lat, shelter.lon]}>
+        <Marker 
+          key={i} 
+          position={[shelter.lat, shelter.lon]}
+          icon={shelterIcon}
+        >
           <Popup>{shelter.name}</Popup>
         </Marker>
       ))}
