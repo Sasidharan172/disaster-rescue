@@ -1,9 +1,11 @@
 "use client"
 
-import React, { useState } from "react"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ArrowLeft } from "lucide-react"
+import { useRouter } from "next/navigation"
+import React, { useState } from "react"
 
 const mockAlerts = [
   {
@@ -25,6 +27,7 @@ const mockAlerts = [
 ]
 
 export default function AlertsPage() {
+  const router = useRouter()
   const [role] = useState<"ngo" | "government">("ngo") // Change as needed for demo
   const [aiInput, setAiInput] = useState("")
   const [aiResponse, setAiResponse] = useState("")
@@ -44,6 +47,19 @@ export default function AlertsPage() {
 
   return (
     <div className="container mx-auto py-10 px-2 md:px-0">
+      {/* Back button */}
+      <div className="max-w-3xl mx-auto mb-6">
+        <Button
+          variant="ghost"
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+          onClick={() => router.back()}
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back
+        </Button>
+      </div>
+
+      {/* Page header */}
       <div className="mb-8 text-center">
         <h1 className="text-3xl font-bold mb-2 text-gray-800">Alerts & Recommendations</h1>
         <p className="text-gray-500 max-w-xl mx-auto">Create, track, and get AI-powered recommendations for disaster alerts. Designed for NGOs and Government agencies.</p>
@@ -103,7 +119,11 @@ export default function AlertsPage() {
                   </thead>
                   <tbody>
                     {mockAlerts.map((alert) => (
-                      <tr key={alert.id} className="bg-white shadow rounded-lg">
+                      <tr 
+                        key={alert.id} 
+                        className="bg-white shadow rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+                        onClick={() => window.location.href = `/dashboard/alerts/${alert.id}`}
+                      >
                         <td className="p-3 font-medium text-gray-800">{alert.title}</td>
                         <td className="p-3">{alert.type}</td>
                         <td className="p-3">
@@ -111,7 +131,13 @@ export default function AlertsPage() {
                         </td>
                         <td className="p-3">{alert.location}</td>
                         <td className="p-3">
-                          <span className={`px-2 py-1 rounded text-xs font-semibold ${alert.severity === "High" ? "bg-red-200 text-red-800" : alert.severity === "Medium" ? "bg-yellow-100 text-yellow-800" : "bg-green-100 text-green-800"}`}>{alert.severity}</span>
+                          <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                            alert.severity === "High" 
+                              ? "bg-red-200 text-red-800" 
+                              : alert.severity === "Medium" 
+                              ? "bg-yellow-100 text-yellow-800" 
+                              : "bg-green-100 text-green-800"
+                          }`}>{alert.severity}</span>
                         </td>
                       </tr>
                     ))}
